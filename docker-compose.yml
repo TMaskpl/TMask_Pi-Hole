@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+
+  pihole:
+    container_name: pihole
+    image: cbcrowe/pihole-unbound:latest
+    restart: unless-stopped
+    environment:
+        TZ: "Europe/Warsaw"
+        WEBPASSWORD: 'tajnehaslo'
+        REV_SERVER: 'false'
+        DNS1: '127.0.0.1#5335'
+        DNSSEC: 'true'
+    ports:
+        - 53:53/tcp
+        - 53:53/udp
+        - 28080:80/tcp
+    volumes:
+        - "./etc-pihole/:/etc/pihole/"
+        - "./etc-dnsmasq.d/:/etc/dnsmasq.d/"
+    labels:
+        - "traefik.enable=true"
+
+networks:
+  tmask:
+    external: true
